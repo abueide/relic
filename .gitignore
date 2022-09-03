@@ -33,3 +33,4 @@ src/low/fiat/*.c
 build/
 cmake-build-debug/
 result
+flake.lock
