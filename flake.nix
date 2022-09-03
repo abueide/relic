@@ -8,15 +8,21 @@
 
     outputs = { self, nixpkgs, flake-utils }:
       flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = nixpkgs.legacyPackages.${system}; in
+        let pkgs = nixpkgs.legacyPackages.${system};
+            deps = with pkgs; [ cmake gmp ];
+            platform_flags = if(pkgs.lib.strings.hasPrefix "aarch64" system) then [ "-DARCH=ARM -DWSIZE=64" ] else [];
+        in
         rec {
+          devShells.default = pkgs.mkShell {
+            packages = deps;
+          };
           defaultPackage = pkgs.stdenv.mkDerivation {
             pname = "relic";
             version = "0.5.0";
             src = self;
-            nativeBuildInputs = with pkgs; [ cmake gmp ];
+            nativeBuildInputs = deps;
             enableParallelBuilding = true;
-            cmakeFlags = [ "-DARITH=gmp"];
+            cmakeFlags = [ "-DARITH=gmp"] ++ platform_flags;
           };
         }
       );
