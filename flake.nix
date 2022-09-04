@@ -18,7 +18,7 @@
           };
           defaultPackage = pkgs.stdenv.mkDerivation {
             pname = "relic";
-            version = "0.5.0";
+            version = "110-flake";
             src = self;
             nativeBuildInputs = deps;
             enableParallelBuilding = true;
